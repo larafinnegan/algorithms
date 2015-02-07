@@ -1,8 +1,8 @@
 class Node
-  attr_accessor :value, :parent, :child
+  attr_accessor :value, :child, :parent
 
-  def initialize
-    @value = 100
+  def initialize(value, child = nil, parent = nil)
+    @value = value
     @parent = parent
     @child = child
   end
@@ -10,15 +10,20 @@ class Node
 
 end
 
-p Node.new
-
 
 def build_tree(array)
+head = Node.new(array[0])
+array[1..-1].each do |x|
+  node = Node.new(array[x])
   
+end
+
 
 end
 
 
 
 
-p build_tree([1,2,3,4,5,6,7,8,9])
+
+
+puts build_tree([1,2,3,4,5,6,7,8,9])
