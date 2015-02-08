@@ -13,7 +13,7 @@ end
 def build_tree(array)
   root = Node.new(array.shift)
   array.each {|x| place_node(node = Node.new(x), root)}
-  puts root.inspect
+  root
 end
 
 def place_node(node, parent)
@@ -25,7 +25,18 @@ def place_node(node, parent)
   end
 end
 
+def breadth_first_search(n, node)
+  queue = [node]
+  while queue.size > 0
+    return queue[0] if queue[0].value == n
+    queue << queue[0].right unless queue[0].right.nil?
+    queue << queue[0].left unless queue[0].left.nil?
+    queue.shift
+  end
+end
 
-build_tree([5,7,1,4,9,7,8,3])
 
+tree = build_tree([5,7,1,4,9,7,8,3])
+
+p breadth_first_search(8, tree)
 
