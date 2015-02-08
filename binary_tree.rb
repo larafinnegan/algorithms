@@ -7,31 +7,21 @@ class Node
     @right = right
     @parent = parent
   end
-
-
 end
 
 
 def build_tree(array)
   root = Node.new(array.shift)
   array.each {|x| place_node(node = Node.new(x), root)}
+  puts root.inspect
 end
 
 def place_node(node, parent)
+  node.parent = parent
   if node.value > parent.value
-    if parent.right.nil? 
-      node.parent = parent
-      parent.right = node
-    else 
-      place_node(node, parent.right)
-    end
+    parent.right.nil? ? parent.right = node : place_node(node, parent.right)
   else
-    if parent.left.nil? 
-      node.parent = parent
-      parent.left = node
-    else 
-      place_node(node, parent.left)
-    end
+    parent.left.nil? ? parent.left = node : place_node(node, parent.left)
   end
 end
 
