@@ -1,10 +1,11 @@
 class Node
-  attr_accessor :value, :child, :parent
+  attr_accessor :value, :left, :right, :parent
 
-  def initialize(value, child = nil, parent = nil)
+  def initialize(value, lef=nil, right=nil, parent = nil)
     @value = value
+    @left = left
+    @right = right
     @parent = parent
-    @child = child
   end
 
 
@@ -12,18 +13,35 @@ end
 
 
 def build_tree(array)
-head = Node.new(array[0])
-array[1..-1].each do |x|
-  node = Node.new(array[x])
-  
+  root = Node.new(array.shift)
+  array.each do |x|
+    node = Node.new(x)
+    current_node = root
+    while node.parent.nil?
+     if node.value > current_node.value
+        if current_node.right.nil? 
+          node.parent = current_node
+          current_node.right = node
+          else 
+            current_node = current_node.right
+          end
+      else
+        if current_node.left.nil? 
+          node.parent = current_node 
+          current_node.left = node
+        else 
+          current_node = current_node.left
+        end
+      end
+    end
+  end
 end
 
 
-end
 
 
 
 
+build_tree([5,7,1,4,9,7,8,3])
 
 
-puts build_tree([1,2,3,4,5,6,7,8,9])
