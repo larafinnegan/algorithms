@@ -52,9 +52,23 @@ def depth_first_search(n, node)
   end
 end
 
+def dfs_rcs(n, node, visited = [node])
+  return node if node.value == n
+  if !node.left.nil? && !visited.include?(node.left)
+    dfs_rcs(n, node.left, visited << node.left)
+  elsif !node.right.nil? && !visited.include?(node.right)
+    dfs_rcs(n, node.right, visited << node.right)
+  elsif node.parent != nil
+    dfs_rcs(n, node.parent, visited)
+  else
+    nil
+  end
+end
+
 tree = build_tree([5,7,1,4,9,7,8,3])
 
 breadth_first_search(8, tree)
 
-p depth_first_search(100, tree)
+depth_first_search(8, tree)
 
+p dfs_rcs(3, tree)
