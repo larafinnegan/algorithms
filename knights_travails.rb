@@ -11,25 +11,42 @@ end
 class Board
   attr_accessor :board
 
-  def initialize(board = [[0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7],
-                          [0, 1, 2, 3, 4, 5, 6, 7]])
+  def initialize(board = Array.new(8, [0, 1, 2, 3, 4, 5, 6, 7]))
     @board = board
+    
   end
+
+
+  def possible_moves(node)
+    node[0] = down
+    node[1] = across
+    moves = [[down - 2, across + 1], [down - 2, across - 1],
+             [down - 1, across + 2], [down + 1, across + 2],
+             [down + 2, across + 1], [down + 2, across - 1],
+             [down - 1, across - 2], [down + 1, across - 2]]
+    possible_moves = moves.select {|x| p x.all? {|y| y < board.length-1 && y > 0}}
+  end
+
+  def create_nodes(coordinates=nil)
+    root = Node.new(coordinates)
+    board.each {|x| p x.index}
+  end
+
+  def place_nodes()
+
+  end
+
+
 end
 
 
 class Knight
-  attr_accessor :position, :destination
+  attr_accessor :position, :destination, :board
 
-  def initialize(position = []. destination = [])
+  def initialize(position = []. destination = [], board = Board.new)
     @position = position
     @destination = destination
+    @board = board
   end
 
   def get_position
@@ -52,20 +69,9 @@ class Knight
 end
 
 
-
-down = 4
-across = 4
-
-puts board[down][across]
+board = Array.new(8, [0, 1, 2, 3, 4, 5, 6, 7])
 
 
 
-moves = [[down - 2][across + 1], [down - 2][across - 1],
-        [down - 1][across + 2], [down + 1][across + 2],
-        [down + 2][across + 1], [down + 2][across - 1],
-        [down - 1][across - 2], [down + 1][across - 2]]
 
 
-array = [1,2,3]
-
-p array[8]
