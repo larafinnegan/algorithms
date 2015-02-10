@@ -17,13 +17,11 @@ class Board
 
 
   def possible_moves(value)
-    down = value[0] 
-    across = value[1]
-    moves = [[down - 2, across + 1], [down - 2, across - 1],
-             [down - 1, across + 2], [down + 1, across + 2],
-             [down + 2, across + 1], [down + 2, across - 1],
-             [down - 1, across - 2], [down + 1, across - 2]]
-    possible_moves = moves.select {|x| x.all? {|y| y < board.length && y >= 0}}
+    moves = [[value[0] - 2, value[1] + 1], [value[0] - 2, value[1] - 1],
+             [value[0] - 1, value[1] + 2], [value[0] + 1, value[1] + 2],
+             [value[0] + 2, value[1] + 1], [value[0] + 2, value[1] - 1],
+             [value[0] - 1, value[1] - 2], [value[0] + 1, value[1] - 2]]
+    moves.select {|x| x.all? {|y| y < board.length && y >= 0}}
   end
 
   def create_root(coordinates = [3,3], destination = [4,3])
