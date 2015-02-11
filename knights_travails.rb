@@ -8,8 +8,7 @@ class Board
   end
 
   def play(start, finish)
-    list = create_root(start, finish)
-    print_list(list)
+    print_list(create_root(start, finish))
   end
 
   private
@@ -54,4 +53,4 @@ class Board
 end
 
 board = Board.new
-board.play([0,0], [0,2])
+board.play([0,0], [7,7])
