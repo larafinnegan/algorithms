@@ -1,8 +1,8 @@
 class Node
-  attr_accessor :coordinates, :parent
+  attr_accessor :yx, :parent
 
-  def initialize(coordinates, parent = nil)
-    @coordinates = coordinates
+  def initialize(yx, parent = nil)
+    @yx = yx
     @parent = parent
   end
 end
@@ -11,45 +11,46 @@ end
 class Board
   attr_accessor :board
 
-  def initialize(board = Array.new(8, [0, 1, 2, 3, 4, 5, 6, 7]))
+  def initialize(board = Array.new(8) {|x| [nil, nil, nil, nil, nil, nil, nil, nil]})
     @board = board
   end
 
 
-  def possible_moves(value)
-    moves = [[value[0] - 2, value[1] + 1], [value[0] - 2, value[1] - 1],
-             [value[0] - 1, value[1] + 2], [value[0] + 1, value[1] + 2],
-             [value[0] + 2, value[1] + 1], [value[0] + 2, value[1] - 1],
-             [value[0] - 1, value[1] - 2], [value[0] + 1, value[1] - 2]]
-    moves.select {|x| x.all? {|y| y < board.length && y >= 0}}
+  def possible_moves(yx = [2,1])
+    moves = [[yx[0] - 2, yx[1] + 1], [yx[0] - 2, yx[1] - 1],
+             [yx[0] - 1, yx[1] + 2], [yx[0] + 1, yx[1] + 2],
+             [yx[0] + 2, yx[1] + 1], [yx[0] + 2, yx[1] - 1],
+             [yx[0] - 1, yx[1] - 2], [yx[0] + 1, yx[1] - 2]]
+    illegal = moves.select {|x| x.all? {|y| y < board.length && y >= 0}}
   end
 
-  def create_root(coordinates = [3,3], destination = [4,3])
-    node = Node.new(coordinates)
+  def create_root(yx = [0,0], destination = [4,0])
+    node = Node.new(yx)
+    board[yx[0]][yx[1]] = node
     place_nodes(node, destination)
-    node
   end
 
   def place_nodes(node, destination)
-    queue = [node]
-    created_nodes = [node]
-    until created_nodes.size == board.flatten.size
-      child_nodes = possible_moves(queue[0].coordinates) 
-      child_nodes.each do |val| 
-        if created_nodes.none? {|x| val == x.coordinates}
-          node = Node.new(val, queue[0])
-          created_nodes << node
-          queue << node
+    q = [node]
+    until board.flatten.none? {|x| x.nil?}
+      child_nodes = possible_moves(q[0].yx) 
+      child_nodes.each do |val|
+        if board[val[0]][val[1]].nil?
+          node = Node.new(val, q[0])
+          board[val[0]][val[1]] = node
+          return path(node) if node.yx == destination
+          q << node
         end
       end
-      p queue[0].coordinates
-      return queue[0].coordinates if queue[0].coordinates == destination
-      queue.shift
+      q.shift
     end
   end
 
+  def path(node, list = [node.yx])
+    path(node.parent, list << node.parent.yx) if node.parent
+    p list
+  end
 end
-
 
   class Knight
     attr_accessor :position, :destination, :board
