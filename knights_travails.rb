@@ -1,20 +1,11 @@
-class Node
-  attr_accessor :yx, :parent
-
-  def initialize(yx, parent = nil)
-    @yx = yx
-    @parent = parent
-  end
-end
-
+Node = Struct.new(:yx, :parent)
 
 class Board
-  attr_accessor :board
+  attr_reader :board
 
   def initialize(board = Array.new(8) {|x| [nil, nil, nil, nil, nil, nil, nil, nil]})
     @board = board
   end
-
 
   def possible_moves(yx = [2,1])
     moves = [[yx[0] - 2, yx[1] + 1], [yx[0] - 2, yx[1] - 1],
@@ -25,7 +16,7 @@ class Board
   end
 
   def create_root(yx = [0,0], destination = [4,0])
-    node = Node.new(yx)
+    node = Node.new(yx, nil)
     board[yx[0]][yx[1]] = node
     place_nodes(node, destination)
   end
@@ -33,12 +24,11 @@ class Board
   def place_nodes(node, destination)
     q = [node]
     until board.flatten.none? {|x| x.nil?}
-      child_nodes = possible_moves(q[0].yx) 
-      child_nodes.each do |val|
+      possible_moves(q[0].yx).each do |val|
         if board[val[0]][val[1]].nil?
           node = Node.new(val, q[0])
-          board[val[0]][val[1]] = node
           return path(node) if node.yx == destination
+          board[val[0]][val[1]] = node
           q << node
         end
       end
@@ -48,7 +38,7 @@ class Board
 
   def path(node, list = [node.yx])
     path(node.parent, list << node.parent.yx) if node.parent
-    p list
+    list
   end
 end
 
@@ -76,8 +66,11 @@ end
       across = gets.chomp.to_i
       destination << down << across
     end
+
+    def play
+      board.create_root(get_position, get_destination)
+
   end
 
-
-  board = Board.new
-  board.create_root
+  knight = Knight.new
+  knight.play
